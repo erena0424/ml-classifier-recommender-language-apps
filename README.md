@@ -1,8 +1,9 @@
 # ML Classifier and Hybrid Recommender for Cold-Start Language App Discovery
-
+---
 This project builds a hybrid, cold-start recommendation system designed to help users discover effective language-learning apps—even when no behavioral or historical user data is available. Traditional approaches based solely on popularity rankings or manual categories often fail to capture what actually makes an app valuable for learning. This system instead combines statistical quality signals, predictive modeling, and content-based features to surface apps with both proven reliability and strong future potential.
 
 ## Background
+---
 I previously built [Finny](https://github.com/erena0424/finny-demo), an online database that helps users find apps through keyword search, categories, and recommendations. This system relied on manual categories and collaborative filtering, which was flawed because: 
 
 1. **Manucal categorization was arbitrary**: Manually assigned categories were subjective and hard to scale, making consistent classification across a large set of apps impossible.
@@ -12,17 +13,17 @@ This new project addresses these flaws by building a scalable, data-driven syste
 
 
 ## Project Pipeline (3 Components)
-
+---
 The entire workflow is split across three sequential files, demonstrating a clean separation between data acquisition, feature engineering, and model application.
 
 ## 0. Getting Started
-
+---
 ### 0-1. Environment Setup
 
 Create and activate a virtual environment (recommended):
 ```
-python3 -m venv env
-source env/bin/activate
+conda create -n env python=3.9.6
+conda activate env
 ```
 
 ### 0-2. Install Dependencies
@@ -40,7 +41,8 @@ nltk.download(['punkt', 'stopwords', 'wordnet'])
 ```
 
 
-## 1. Data Sourcing & Initial Feature Creation
+## 1. Data Sourcing
+----
 [00_Data_Acquisition_and_Quality_Filtering.ipynb](00_Data_Acquisition_and_Quality_Filtering.ipynb)
 ### Objective
 Acquire a high-signal dataset of language apps, remove noise, and perform essential low-level ETL (Extract, Transform, Load) tasks.
@@ -50,7 +52,8 @@ Acquire a high-signal dataset of language apps, remove noise, and perform essent
 * **Initial Feature Engineering:** Applied robust cleaning to convert raw strings (e.g., install counts) into usable numerical data.
 * **Filtering:** Applied domain-specific keyword filtering to ensure every app is relevant, removing irrelevant general 'Education' content.
 
-## 2. 01_EDA_App_Categorization_and_Features.ipynb
+## 2. EDA, Feature Engineering, and App Categorization
+----
 [01_EDA_App_Categorization_and_Features.ipynb](01_EDA_App_Categorization_and_Features.ipynb)
 
 ### Objective
@@ -65,8 +68,10 @@ Validate data quality, create the core methodology feature (`category`), and pro
 
 *(language_apps.csv)[language_apps.csv] has files saved from this process.
 *[language_apps_MANUAL_CATEGORY_UPDATE.csv](language_apps_MANUAL_CATEGORY_UPDATE.csv) has some manually updated categories for supervised learning.
-## 3. 02_Hybrid_Recommender_System_FINAL.md
-[02_ML-Powered App Discovery: Prediction and Hybrid Recommender (Components C & B).ipynb](02_ML-Powered App Discovery: Prediction and Hybrid Recommender (Components C & B).ipynb)
+
+## 3. Recommender Building
+----
+[02_Popularity_Prediction_and_Hybrid_Recommender.ipynb](02_Popularity_Prediction_and_Hybrid_Recommender.ipynb)
 
 ### Objective
 Apply the Supervised Learning-to-Rank (LTR) concept to synthesize two distinct ranking factors into a single score.
