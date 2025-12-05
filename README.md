@@ -1,9 +1,7 @@
 # ML Classifier and Hybrid Recommender for Cold-Start Language App Discovery
----
 This project builds a hybrid, cold-start recommendation system designed to help users discover effective language-learning apps—even when no behavioral or historical user data is available. Traditional approaches based solely on popularity rankings or manual categories often fail to capture what actually makes an app valuable for learning. This system instead combines statistical quality signals, predictive modeling, and content-based features to surface apps with both proven reliability and strong future potential.
 
 ## Background
----
 I previously built [Finny](https://github.com/erena0424/finny-demo), an online database that helps users find apps through keyword search, categories, and recommendations. This system relied on manual categories and collaborative filtering, which was flawed because: 
 
 1. **Manucal categorization was arbitrary**: Manually assigned categories were subjective and hard to scale, making consistent classification across a large set of apps impossible.
@@ -13,11 +11,9 @@ This new project addresses these flaws by building a scalable, data-driven syste
 
 
 ## Project Pipeline (3 Components)
----
 The entire workflow is split across three sequential files, demonstrating a clean separation between data acquisition, feature engineering, and model application.
 
 ## 0. Getting Started
----
 ### 0-1. Environment Setup
 
 Create and activate a virtual environment (recommended):
@@ -42,7 +38,6 @@ nltk.download(['punkt', 'stopwords', 'wordnet'])
 
 
 ## 1. Data Sourcing
-----
 [00_Data_Acquisition_and_Quality_Filtering.ipynb](00_Data_Acquisition_and_Quality_Filtering.ipynb)
 ### Objective
 Acquire a high-signal dataset of language apps, remove noise, and perform essential low-level ETL (Extract, Transform, Load) tasks.
@@ -53,7 +48,6 @@ Acquire a high-signal dataset of language apps, remove noise, and perform essent
 * **Filtering:** Applied domain-specific keyword filtering to ensure every app is relevant, removing irrelevant general 'Education' content.
 
 ## 2. EDA, Feature Engineering, and App Categorization
-----
 [01_EDA_App_Categorization_and_Features.ipynb](01_EDA_App_Categorization_and_Features.ipynb)
 
 ### Objective
@@ -70,7 +64,6 @@ Validate data quality, create the core methodology feature (`category`), and pro
 *[language_apps_MANUAL_CATEGORY_UPDATE.csv](language_apps_MANUAL_CATEGORY_UPDATE.csv) has some manually updated categories for supervised learning.
 
 ## 3. Recommender Building
-----
 [02_Popularity_Prediction_and_Hybrid_Recommender.ipynb](02_Popularity_Prediction_and_Hybrid_Recommender.ipynb)
 
 ### Objective
@@ -79,11 +72,20 @@ Apply the Supervised Learning-to-Rank (LTR) concept to synthesize two distinct r
 ### Key Deliverables
 
 #### A. Predictive Analysis (Feature Alignment Score - FAS)
-* **Model:** Used a high-performance **XGBoost Classifier** (with cross-validation) to predict **High Popularity** (Quality $\ge 4.0 \text{ AND } \text{Installs} \ge 500k$).
-* **FAS Generation:** The **Feature Importances** (weights) derived from XGBoost are used to calculate the **FAS**, which assigns a predictive score to each app.
+* **Model:** Used a high-performance **Logistic Regression Classifier** (with cross-validation) to predict **High Popularity** (Quality $\ge 4.0 \text{ AND } \text{Installs} \ge 500k$).
+* **FAS Generation:** The **Feature Importances** (weights) derived from Logistic Regression Model are used to calculate the **FAS**, which assigns a predictive score to each app.
 
 #### B. Hybrid Ranking Formula
 * **W1 (Quality):** **Bayesian Adjusted Score** (BAS) — Corrects statistical volatility in raw scores.
 * **W2 (Predictive):** **Normalized FAS** — Provides a predictive boost to apps with high-potential features (e.g., AI, high max IAP price).
 * **Final Result:** The recommender ranks apps based on the linear combination: $\text{Rank} = (W_1 \cdot \text{BAS}) + (W_2 \cdot \text{FAS})$.
 
+
+## Future Steps
+1. Deployment: The final categorization logic (S-BERT + Probabilistic SVM) and the LTR ranking function will be possibly deployed as a back-end microservice to power the live Finny recommendation widget while ensuring responsible and policy-aligned use of any scraped data.
+2. A/B Test Validation: The ultimate proof of value requires tracking user behavior via an A/B test:
+    - Control (A): The old popularity-based ranking (or a simple random ranking).
+    - Variant (B): The new Hybrid LTR Ranking System.
+3. Success Metrics: The quality of the new system will be validated by tracking the following live metrics:
+    - Click-Through Rate (CTR): Do users click on the recommended apps more often?
+    - Conversion Rate (Install/Sign-up): Does the user complete the desired action after clicking?
